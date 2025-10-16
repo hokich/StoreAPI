@@ -1,0 +1,23 @@
+# django
+pycache
+.env
+/media
+/static
+
+# idea
+__pycache__
+.idea
+
+# Pytest
+.pytest_cache
+
+.DS_Store
+
+**/static/**/css/app.css
+**/static/**/js/vendors.js
+**/static/**/js/vendors.js.map
+**/static/**/js/vendors.common.js
+**/static/**/js/app.js
+**/static/**/js/app.js.map
+
+logs

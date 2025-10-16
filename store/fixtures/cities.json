@@ -1,0 +1,51 @@
+[
+  {
+    "model": "store.city",
+    "pk": 1,
+    "fields": {
+      "name": "Berlin"
+    }
+  },
+  {
+    "model": "store.city",
+    "pk": 2,
+    "fields": {
+      "name": "Hamburg"
+    }
+  },
+  {
+    "model": "store.city",
+    "pk": 3,
+    "fields": {
+      "name": "Munich"
+    }
+  },
+  {
+    "model": "store.city",
+    "pk": 4,
+    "fields": {
+      "name": "Rostock"
+    }
+  },
+  {
+    "model": "store.city",
+    "pk": 5,
+    "fields": {
+      "name": "Frankfurt"
+    }
+  },
+  {
+    "model": "store.city",
+    "pk": 6,
+    "fields": {
+      "name": "Stuttgart"
+    }
+  },
+  {
+    "model": "store.city",
+    "pk": 7,
+    "fields": {
+      "name": "Dresden"
+    }
+  }
+]

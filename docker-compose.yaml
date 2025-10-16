@@ -1,0 +1,95 @@
+version: '3.0'
+
+services:
+  store-api:
+    container_name: store-api
+    build:
+      context: .
+    env_file:
+      - StoreAPI/.env
+    volumes:
+      - .:/app
+      - ./media:/app/media
+    ports:
+      - '127.0.0.1:8000:8000'
+    depends_on:
+      - store-api-db
+      - store-api-redis
+      - store-api-search
+    restart: always
+  store-api-db:
+    container_name: store-api-db
+    image: postgres:16.1
+    env_file:
+      - StoreAPI/.env
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - '127.0.0.1:5433:5432'
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data
+    restart: always
+  store-api-redis:
+    container_name: store-api-redis
+    image: redis:7.2
+    env_file:
+      - StoreAPI/.env
+    ports:
+      - '127.0.0.1:6380:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis:/data
+    restart: always
+  store-api-search:
+    image: getmeili/meilisearch:latest
+    container_name: store-api-search
+    ports:
+      - '127.0.0.1:7701:7700'
+    environment:
+      MEILI_HTTP_ADDR: '0.0.0.0:7700'
+    env_file:
+      - StoreAPI/.env
+    volumes:
+      - meilisearch-data:/meili_data
+    restart: always
+
+  store-api-celery:
+    container_name: store-api-celery
+    build:
+      context: .
+    command: celery -A StoreAPI worker --loglevel=info --pool=solo
+    env_file:
+      - StoreAPI/.env
+    volumes:
+      - .:/app
+      - ./media:/app/media
+    depends_on:
+      - store-api-db
+      - store-api-redis
+    restart: always
+
+  store-api-celery-beat:
+    container_name: store-api-celery-beat
+    build:
+      context: .
+    command: celery -A StoreAPI beat --loglevel=info --scheduler django_celery_beat.schedulers.DatabaseScheduler
+    env_file:
+      - StoreAPI/.env
+    volumes:
+      - .:/app
+      - ./media:/app/media
+    depends_on:
+      - store-api-db
+      - store-api-celery
+      - store-api-redis
+    restart: always
+
+volumes:
+  pgdata:
+    driver: local
+  pgdata_prod:
+    driver: local
+  redis:
+    driver: local
+  meilisearch-data:
+    driver: local
